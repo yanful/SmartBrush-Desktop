@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 Stream, Capture & Process</title>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .section {
+            flex: 1;
+            border: 1px solid #ccc;
+            margin: 10px;
+            overflow: hidden;
+            position: relative;
+
+            /* Flexbox settings to center content */
+            display: flex;
+            align-items: center;   /* Vertical centering */
+            justify-content: center;  /* Horizontal centering */
+        }
+        iframe {
+            width: fit-content;
+            height: 100%;
+            border: none;  /* Removes the default iframe border */
+            display: block;
+            overflow: hidden; /* Hide scroll bars, but you can adjust this */
+            object-fit: contain; /* Fit content within the iframe */
+        }
+        #btnProcess {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Video Stream -->
+    <div class="section" id="videoSection">
+        <iframe src="http://esp32.local:81/stream"></iframe>
+    </div>
+
+    <!-- Captured Screenshot -->
+    <div class="section" id="captureSection">
+        <!-- Content will be loaded dynamically -->
+    </div>
+
+    <!-- Processed Image -->
+    <div class="section" id="processSection">
+        <!-- <iframe src="porp/porphyrin.jpg" alt="Image" style="width: 360px; height: 100%;"></iframe> -->
+    </div>
+</div>
+<button id="btnProcess" type="button">Process</button>
+<script>
+    // This code will prompt the user before the page is reloaded or navigated away.
+    window.addEventListener('beforeunload', function (e) {
+        e.preventDefault();
+        e.returnValue = '';
+    });
+</script>
+<script>
+    document.getElementById('btnProcess').addEventListener('click', function(event) {
+    event.preventDefault();
+        const captureSection = document.getElementById('captureSection');
+        const processSection = document.getElementById('processSection');
+
+        // Display the captured image
+        const captureIframe = document.createElement('iframe');
+        captureIframe.src = "http://esp32.local/capture"; 
+        captureSection.innerHTML = '';
+        captureSection.appendChild(captureIframe);
+
+        // fetch("http://127.0.0.1:5000/process_image")
+        // .then(response => {
+        //     if (response.ok) {
+        //         return response.blob();
+        //     } else {
+        //         throw new Error(`HTTP error! Status: ${response.status}`);
+        //     }
+        // })
+        // .then(blob => {
+        //     console.log('Processed image saved successfully.');
+        //     let objectURL = URL.createObjectURL(blob);
+        //     // Here you can use objectURL to set it as a source for your image if needed
+        // })
+        // .catch(error => {
+        //     console.error('There was an error with the request:', error.message);
+        // });
+
+        const processImageElement = document.createElement('img');
+        processImageElement.style.width = 'fit-content';  // adjust width as required
+        processImageElement.style.height = '100%';  // adjust height as required
+
+        // // If loading the image from 'http://127.0.0.1:5000/process_image' fails
+        // processImageElement.onerror = function() {
+        //     console.error("Failed to load processed image from server. Using local image as fallback.");
+        //     processImageElement.src = "porp/porphyrin.jpg";  // Default to local image
+        // };
+
+        processSection.innerHTML = '';
+        processSection.appendChild(processImageElement); 
+        processImageElement.onload = function() {
+            console.log("Image loaded successfully.");
+        };
+        processImageElement.onerror = function() {
+            console.error("Error loading the image.");
+        };
+
+        // This line is at the end to initiate the loading of the image after the 'onerror' handler is set
+        processImageElement.src = "http://127.0.0.1:5000/process_image?"
+
+
+
+    });
+</script>
+
+
+</body>
+</html>
+
