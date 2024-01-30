@@ -1,20 +1,3 @@
-# from flask import Flask, send_file
-# import matlab.engine
-
-# app = Flask(__name__)
-# eng = matlab.engine.start_matlab()
-
-# @app.route('/process_image')
-# def process_image():
-#     # Run your MATLAB script
-#     eng.Porp(nargout=0)
-#     # Send the processed image
-#     return send_file('porp/porphyrin.jpg', mimetype='image/jpeg')
-
-# if __name__ == '__main__':
-#     app.run(debug=True)
-
-
 from flask import Flask, send_file
 from flask_cors import CORS
 import matlab.engine
